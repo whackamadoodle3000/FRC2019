@@ -7,7 +7,10 @@ import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import frc.team972.robot.Constants;
 import frc.team972.robot.driver_utils.TalonSRXFactory;
+import frc.team972.robot.teleop.ControlBoard;
+import frc.team972.robot.util.CoordinateDriveSignal;
 import frc.team972.robot.util.DriveSignal;
+import frc.team972.robot.util.MecanumHelper;
 
 public class Drive extends Subsystem {
 
@@ -16,6 +19,8 @@ public class Drive extends Subsystem {
     private TalonSRX mLeftFront, mLeftBack, mRightFront, mRightBack;
 
     private boolean mIsBrakeMode;
+
+    private static Drive mInstance = null;
 
     public Drive() {
         mLeftFront = TalonSRXFactory.createDefaultTalon(Constants.mLeftFrontId);
@@ -34,6 +39,14 @@ public class Drive extends Subsystem {
         setBrakeMode(false);
     }
 
+    public static Drive getInstance() {
+        if (mInstance == null) {
+            mInstance = new Drive();
+        }
+        return mInstance;
+    }
+
+
     private void configureMaster(TalonSRX talon, boolean left) {
         //TODO: Configure Talons for Sensored operation
         talon.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 5, 100);
@@ -50,6 +63,11 @@ public class Drive extends Subsystem {
         //talon.configVelocityMeasurementWindow(1, Constants.kLongCANTimeoutMs);
         //talon.configClosedloopRamp(Constants.kDriveVoltageRampRate, Constants.kLongCANTimeoutMs);
         talon.configNeutralDeadband(0.04, 0);
+    }
+
+    public synchronized  void setOpenLoopMecanum(CoordinateDriveSignal signal) {
+        double current_angle = 0; //TODO: Grab estimated robot rotation state from RobotState after sensor-fusion.
+        DriveSignal driveSignal = MecanumHelper.cartesianCalculate(signal, current_angle);
     }
 
     public synchronized void setOpenLoop(DriveSignal signal) {
@@ -90,7 +108,8 @@ public class Drive extends Subsystem {
 
     @Override
     public boolean checkSystem() {
-        return false;
+        //TODO: Implement
+        return true;
     }
 
     @Override
@@ -100,8 +119,6 @@ public class Drive extends Subsystem {
             mLeftFront.set(ControlMode.PercentOutput, mPeriodicIO.left_front_demand, DemandType.ArbitraryFeedForward, 0.0);
             mRightBack.set(ControlMode.PercentOutput, mPeriodicIO.right_back_demand, DemandType.ArbitraryFeedForward, 0.0);
             mLeftBack.set(ControlMode.PercentOutput, mPeriodicIO.left_back_demand, DemandType.ArbitraryFeedForward, 0.0);
-
-
         }
     }
 
