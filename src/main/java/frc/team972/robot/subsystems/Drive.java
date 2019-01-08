@@ -68,6 +68,9 @@ public class Drive extends Subsystem {
     public synchronized  void setOpenLoopMecanum(CoordinateDriveSignal signal) {
         double current_angle = 0; //TODO: Grab estimated robot rotation state from RobotState after sensor-fusion.
         DriveSignal driveSignal = MecanumHelper.cartesianCalculate(signal, current_angle);
+
+        //Feed transformed Mecanum values into traditional motor values
+        setOpenLoop(driveSignal);
     }
 
     public synchronized void setOpenLoop(DriveSignal signal) {
