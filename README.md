@@ -10,3 +10,5 @@ ___
 - [ ] Test IR vision with alignment line
 - [ ] Use camera to detect hatch panel
 - [ ] Optimize camera network
+- [ ] Test camera switching on the robot (Maciej)
+- [ ] Add overlay to the feed from the camera (Maciej)
