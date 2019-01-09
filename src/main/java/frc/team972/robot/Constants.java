@@ -2,6 +2,8 @@ package frc.team972.robot;
 
 public class Constants {
 
+    public static final int kDriveGamepadPort = 1;
+
     // DRIVE MOTOR IDS
     // TODO: Fill with real Talon ID
 

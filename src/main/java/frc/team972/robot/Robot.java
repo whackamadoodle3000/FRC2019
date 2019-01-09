@@ -6,8 +6,16 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import frc.team972.robot.loops.Looper;
 import frc.team972.robot.subsystems.ExampleSubsystem;
 import frc.team972.robot.subsystems.SubsystemManager;
+import frc.team972.robot.teleop.TeleopManager;
 
 public class Robot extends TimedRobot {
+
+	private TeleopManager teleopManager = TeleopManager.getInstance();
+	private Looper mLooper = new Looper();
+
+	private final SubsystemManager mSubsystemManager = new SubsystemManager(
+			Arrays.asList(ExampleSubsystem.getInstance()
+	));
 
 	@Override
 	public void robotInit() {
@@ -23,23 +31,28 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void teleopInit() {
+
+		mSubsystemManager.registerEnabledLoops(mLooper);
+
+		mLooper.start();
+	}
+
+	@Override public void teleopPeriodic() {
+		teleopManager.update();
 	}
 
 	@Override
 	public void testInit() {
-		SubsystemManager mSubsystemManager = new SubsystemManager(Arrays.asList(ExampleSubsystem.getInstance()));
 
-		Looper mLooper = new Looper();
-		mSubsystemManager.registerEnabledLoops(mLooper);
+	}
 
-		mLooper.start();
+	@Override
+	public void disabledInit() {
 		try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
+			mLooper.stop();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		mLooper.stop();
 	}
 
 }

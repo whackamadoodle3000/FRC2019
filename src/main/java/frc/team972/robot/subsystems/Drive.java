@@ -18,6 +18,8 @@ public class Drive extends Subsystem {
     private DriveControlState mDriveControlState;
     private TalonSRX mLeftFront, mLeftBack, mRightFront, mRightBack;
 
+    CoordinateDriveSignal mecanumDriveSignalDesired = null;
+
     private boolean mIsBrakeMode;
 
     private static Drive mInstance = null;
@@ -66,11 +68,14 @@ public class Drive extends Subsystem {
     }
 
     public synchronized  void setOpenLoopMecanum(CoordinateDriveSignal signal) {
-        double current_angle = 0; //TODO: Grab estimated robot rotation state from RobotState after sensor-fusion.
-        DriveSignal driveSignal = MecanumHelper.cartesianCalculate(signal, current_angle);
+        mecanumDriveSignalDesired = signal;
+        if(mDriveControlState != DriveControlState.OPEN_LOOP_MECANUM) {
+            setBrakeMode(false);
 
-        //Feed transformed Mecanum values into traditional motor values
-        setOpenLoop(driveSignal);
+            System.out.println("Switching to mecanum open loop");
+            System.out.println(signal);
+            mDriveControlState = DriveControlState.OPEN_LOOP;
+        }
     }
 
     public synchronized void setOpenLoop(DriveSignal signal) {
@@ -107,6 +112,7 @@ public class Drive extends Subsystem {
     public enum DriveControlState {
         OPEN_LOOP, // voltage control
         PATH_FOLLOWING, // velocity control
+        OPEN_LOOP_MECANUM
     }
 
     @Override
@@ -118,11 +124,22 @@ public class Drive extends Subsystem {
     @Override
     public synchronized void writePeriodicOutputs() {
         if (mDriveControlState == DriveControlState.OPEN_LOOP) {
-            mRightFront.set(ControlMode.PercentOutput, mPeriodicIO.right_front_demand, DemandType.ArbitraryFeedForward, 0.0);
-            mLeftFront.set(ControlMode.PercentOutput, mPeriodicIO.left_front_demand, DemandType.ArbitraryFeedForward, 0.0);
-            mRightBack.set(ControlMode.PercentOutput, mPeriodicIO.right_back_demand, DemandType.ArbitraryFeedForward, 0.0);
-            mLeftBack.set(ControlMode.PercentOutput, mPeriodicIO.left_back_demand, DemandType.ArbitraryFeedForward, 0.0);
+            setMotorsOpenValue();
+        } else if((mDriveControlState == DriveControlState.OPEN_LOOP_MECANUM) && (mecanumDriveSignalDesired != null)) {
+            double current_angle = 0; //TODO: Grab estimated robot rotation state from RobotState after sensor-fusion.
+            DriveSignal driveSignal = MecanumHelper.cartesianCalculate(mecanumDriveSignalDesired, current_angle);
+
+            //Feed transformed Mecanum values into traditional motor values
+            setOpenLoop(driveSignal);
+            setMotorsOpenValue();
         }
+    }
+
+    public void setMotorsOpenValue() {
+        mRightFront.set(ControlMode.PercentOutput, mPeriodicIO.right_front_demand, DemandType.ArbitraryFeedForward, 0.0);
+        mLeftFront.set(ControlMode.PercentOutput, mPeriodicIO.left_front_demand, DemandType.ArbitraryFeedForward, 0.0);
+        mRightBack.set(ControlMode.PercentOutput, mPeriodicIO.right_back_demand, DemandType.ArbitraryFeedForward, 0.0);
+        mLeftBack.set(ControlMode.PercentOutput, mPeriodicIO.left_back_demand, DemandType.ArbitraryFeedForward, 0.0);
     }
 
     @Override
@@ -132,7 +149,7 @@ public class Drive extends Subsystem {
 
     @Override
     public void stop() {
-
+        mecanumDriveSignalDesired = null;
     }
 
     public static class PeriodicIO {
