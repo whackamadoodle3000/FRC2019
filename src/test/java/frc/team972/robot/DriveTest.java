@@ -1,14 +1,27 @@
 package frc.team972.robot;
 
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import frc.team972.robot.subsystems.Drive;
 import frc.team972.robot.util.CoordinateDriveSignal;
 import frc.team972.robot.util.DriveSignal;
 import frc.team972.robot.util.MecanumHelper;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.junit.Assert.assertEquals;
 
+@RunWith(MockitoJUnitRunner.class)
 public class DriveTest {
+
+    @Mock
+    TalonSRX srxMock;
+
+    @InjectMocks
+    Drive driveMock;
+
     @Test
     public void testMecanum() {
         DriveSignal signal = MecanumHelper.cartesianCalculate(
@@ -22,10 +35,7 @@ public class DriveTest {
     }
 
     @Test
-    public void testDriveMotorVoltage() {
-
-        Drive.getInstance().setOpenLoop(new DriveSignal(0.1, 0.2, 0.3, 0.4));
-
-        //Causes LinkError
+    public void testDriveMotorVoltage() throws Exception {
+        driveMock.setMotorsOpenValue();
     }
 }
