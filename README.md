@@ -2,6 +2,7 @@
 ___
 ### TODO
 - [ ] Fix code building
+- [ ] Refactor Code Structure
 - [x] Add teleop logic for mecanum drive (Jody)
 - [ ] Add teleop logic for arcade drive (Val)
 - [ ] Detect alignment lines
