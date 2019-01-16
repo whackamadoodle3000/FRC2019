@@ -43,8 +43,15 @@ public class DriveSignal {
         return mBrakeMode;
     }
 
+    public void set(double a, double b, double c, double d) {
+        mLeftMotorFront = a;
+        mLeftMotorBack = b;
+        mRightMotorFront = c;
+        mRightMotorBack = d;
+    }
+
     @Override
     public String toString() {
-        return "L: " + mLeftMotorFront + ", R: " + mRightMotorFront + (mBrakeMode ? ", BRAKE" : "");
+        return "L: " + mLeftMotorFront + " " + mLeftMotorBack + ", R: " + mRightMotorFront + " " + mRightMotorBack + (mBrakeMode ? ", BRAKE" : "");
     }
 }

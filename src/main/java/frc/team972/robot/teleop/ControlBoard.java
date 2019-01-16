@@ -27,4 +27,8 @@ public class ControlBoard {
     public double getRotate() {
         return mDriveControlBoard.getRotate();
     }
+
+    public boolean getNoFieldOrient() {
+        return mDriveControlBoard.getNoFieldOrient();
+    }
 }

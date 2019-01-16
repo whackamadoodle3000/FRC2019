@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import frc.team972.robot.loops.Looper;
+import frc.team972.robot.subsystems.Drive;
 import frc.team972.robot.subsystems.ExampleSubsystem;
 import frc.team972.robot.subsystems.SubsystemManager;
 import frc.team972.robot.teleop.TeleopManager;
@@ -14,7 +15,7 @@ public class Robot extends TimedRobot {
 	private Looper mLooper = new Looper();
 
 	private final SubsystemManager mSubsystemManager = new SubsystemManager(
-			Arrays.asList(ExampleSubsystem.getInstance()
+			Arrays.asList(ExampleSubsystem.getInstance(), Drive.getInstance()
 	));
 
 	@Override
@@ -31,9 +32,8 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void teleopInit() {
-
+		Drive.getInstance().zeroSensors();
 		mSubsystemManager.registerEnabledLoops(mLooper);
-
 		mLooper.start();
 	}
 

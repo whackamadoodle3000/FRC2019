@@ -4,10 +4,24 @@ public class CoordinateDriveSignal {
     double x;
     double y;
     double rotation;
+    boolean noFieldOrient;
 
-    public CoordinateDriveSignal(double x, double y, double rotation) {
+    public CoordinateDriveSignal(double x, double y, double rotation, boolean noFieldOrient) {
         this.x = x;
         this.y = y;
         this.rotation = rotation;
+        this.noFieldOrient = noFieldOrient;
+    }
+
+    public void addRotation(double a) {
+        rotation = rotation + a;
+    }
+
+    public boolean getFieldOrient() {
+        return !noFieldOrient;
+    }
+
+    public String toString() {
+        return ("x: " + x + " y: " + y + " rot: " + rotation);
     }
 }

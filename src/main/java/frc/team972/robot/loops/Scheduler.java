@@ -9,11 +9,16 @@ public class Scheduler {
 
     public Scheduler(CrashTrackingRunnable runnable_) {
         runnable = runnable_;
+    }
+
+    public synchronized void startPeriodic(double _period) {
+        threadRunning = true;
+        period = (long)(_period * 1000);
         thread = new Thread() {
             public void run() {
                 while(true) {
                     if(threadRunning) {
-                        runnable_.run();
+                        runnable.run();
                         try {
                             Thread.sleep(period);
                         } catch (Exception e) {
@@ -24,17 +29,14 @@ public class Scheduler {
             }
         };
         thread.setPriority(Thread.MAX_PRIORITY);
-    }
-
-    public synchronized void startPeriodic(double _period) {
-        threadRunning = true;
-        period = (long)(_period * 1000);
         thread.start();
     }
 
     //Pseudo "Thread Safe"
     public synchronized void stop() {
+        System.out.println("Stopping Thread");
         threadRunning = false;
         thread.stop();
+        thread = null;
     }
 }

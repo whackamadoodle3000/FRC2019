@@ -9,11 +9,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.junit.Assert.assertEquals;
 
-@RunWith(MockitoJUnitRunner.class)
 public class DriveTest {
 
     @Mock
@@ -34,8 +32,4 @@ public class DriveTest {
         assertEquals(signal.getRightBack(), -16.803847577293, 0.0001);
     }
 
-    @Test
-    public void testDriveMotorVoltage() throws Exception {
-        driveMock.setMotorsOpenValue();
-    }
 }

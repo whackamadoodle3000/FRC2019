@@ -27,12 +27,17 @@ public class GamepadDriveControlBoard {
 
     public double getTranslateX() {
         //Left and Right on the Left Joystick
-        return mJoystick.getRawAxis(4);
+        return mJoystick.getRawAxis(0);
     }
 
     public double getRotate() {
         //Left and Right on the Right Joystick
         //TODO: Fill Axis!
-        return mJoystick.getRawAxis(999);
+        return -mJoystick.getRawAxis(4);
     }
+
+    public boolean getNoFieldOrient() {
+        return mJoystick.getRawButton(6);
+    }
+
 }

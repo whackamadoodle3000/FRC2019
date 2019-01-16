@@ -8,7 +8,7 @@ import java.util.List;
  * powers up and stopped after the match.
  */
 public class Looper implements ILooper {
-    public final double kPeriod = 0.05;
+    public final double kPeriod = 0.01;
 
     private boolean running_;
 

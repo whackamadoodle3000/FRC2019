@@ -1,10 +1,9 @@
 plugins {
     id "java"
-    id "eclipse"
-    id "edu.wpi.first.GradleRIO" version "2019.1.1-beta-4a"      
+    id "edu.wpi.first.GradleRIO" version "2019.1.1"
 }
 
-def ROBOT_MAIN_CLASS = "frc.team972.robot.Robot"
+def ROBOT_MAIN_CLASS = "frc.team972.robot.Main"
 
 // Define my targets (RoboRIO) and artifacts (deployable files)
 // This is added by GradleRIO's backing project EmbeddedTools.
@@ -35,10 +34,6 @@ deploy {
     }
 }
 
-repositories {
-    mavenCentral()
-    jcenter()
-}
 
 // Defining my dependencies. In this case, WPILib (+ friends), and vendor libraries.
 // Also defines JUnit 4.

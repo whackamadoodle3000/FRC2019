@@ -5,6 +5,9 @@ import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+import com.kauailabs.navx.frc.AHRS;
+import edu.wpi.first.wpilibj.SPI;
 import frc.team972.robot.Constants;
 import frc.team972.robot.driver_utils.TalonSRXFactory;
 import frc.team972.robot.teleop.ControlBoard;
@@ -14,17 +17,27 @@ import frc.team972.robot.util.MecanumHelper;
 
 public class Drive extends Subsystem {
 
-    private PeriodicIO mPeriodicIO;
+    static private AHRS ahrs;
+
+    private PeriodicIO mPeriodicIO = new PeriodicIO();
     private DriveControlState mDriveControlState;
     private TalonSRX mLeftFront, mLeftBack, mRightFront, mRightBack;
+    private Double last_angle = null;
 
     CoordinateDriveSignal mecanumDriveSignalDesired = null;
 
     private boolean mIsBrakeMode;
-
     private static Drive mInstance = null;
 
     public Drive() {
+        /*
+        mLeftFront = new VictorSPX(Constants.mLeftFrontId);
+        mLeftBack = new VictorSPX(Constants.mLeftBackId);
+        mRightFront = new VictorSPX(Constants.mRightFrontId);
+        mRightBack = new VictorSPX(Constants.mRightBackId);
+        */
+
+
         mLeftFront = TalonSRXFactory.createDefaultTalon(Constants.mLeftFrontId);
         configureMaster(mLeftFront, true);
 
@@ -38,11 +51,12 @@ public class Drive extends Subsystem {
         configureMaster(mRightBack, false);
 
         mIsBrakeMode = true;
-        setBrakeMode(false);
+        setBrakeMode(true);
     }
 
     public static Drive getInstance() {
         if (mInstance == null) {
+            ahrs = new AHRS(SPI.Port.kMXP, (byte)200);
             mInstance = new Drive();
         }
         return mInstance;
@@ -70,20 +84,18 @@ public class Drive extends Subsystem {
     public synchronized  void setOpenLoopMecanum(CoordinateDriveSignal signal) {
         mecanumDriveSignalDesired = signal;
         if(mDriveControlState != DriveControlState.OPEN_LOOP_MECANUM) {
-            setBrakeMode(false);
+            setBrakeMode(true);
 
-            System.out.println("Switching to mecanum open loop");
-            System.out.println(signal);
-            mDriveControlState = DriveControlState.OPEN_LOOP;
+            //System.out.println("Switching to mecanum open loop");
+            mDriveControlState = DriveControlState.OPEN_LOOP_MECANUM;
         }
     }
 
     public synchronized void setOpenLoop(DriveSignal signal) {
         if (mDriveControlState != DriveControlState.OPEN_LOOP) {
-            setBrakeMode(false);
+            setBrakeMode(true);
 
-            System.out.println("Switching to open loop");
-            System.out.println(signal);
+            //System.out.println("Switching to open loop");
             mDriveControlState = DriveControlState.OPEN_LOOP;
         }
 
@@ -126,16 +138,45 @@ public class Drive extends Subsystem {
         if (mDriveControlState == DriveControlState.OPEN_LOOP) {
             setMotorsOpenValue();
         } else if((mDriveControlState == DriveControlState.OPEN_LOOP_MECANUM) && (mecanumDriveSignalDesired != null)) {
-            double current_angle = 0; //TODO: Grab estimated robot rotation state from RobotState after sensor-fusion.
+            double current_angle = -ahrs.getAngle(); //TODO: Grab estimated robot rotation state from RobotState after sensor-fusion.
+
+            if(mecanumDriveSignalDesired.getFieldOrient() == false) {
+                current_angle = 0;
+            }
+
+            if(last_angle == null) {
+                //Zero Last angle on first loop
+                last_angle = current_angle;
+            }
+            double angle_velocity = (current_angle - last_angle);
+            double angle_correction = -angle_velocity * 0.2;
+            angle_correction = MecanumHelper.handleDeadband(angle_correction, 0.01);
+
+            System.out.println(current_angle + " " + last_angle + " " + mecanumDriveSignalDesired.getFieldOrient());
+
+            if(current_angle != 0) {
+                mecanumDriveSignalDesired.addRotation(angle_correction);
+            }
+
             DriveSignal driveSignal = MecanumHelper.cartesianCalculate(mecanumDriveSignalDesired, current_angle);
 
             //Feed transformed Mecanum values into traditional motor values
+
             setOpenLoop(driveSignal);
             setMotorsOpenValue();
+
+            if(mecanumDriveSignalDesired.getFieldOrient()) {
+                last_angle = current_angle;
+            } else {
+                last_angle = null;
+            }
         }
     }
 
     public void setMotorsOpenValue() {
+
+        //System.out.println(mPeriodicIO);
+
         mRightFront.set(ControlMode.PercentOutput, mPeriodicIO.right_front_demand, DemandType.ArbitraryFeedForward, 0.0);
         mLeftFront.set(ControlMode.PercentOutput, mPeriodicIO.left_front_demand, DemandType.ArbitraryFeedForward, 0.0);
         mRightBack.set(ControlMode.PercentOutput, mPeriodicIO.right_back_demand, DemandType.ArbitraryFeedForward, 0.0);
@@ -148,8 +189,15 @@ public class Drive extends Subsystem {
     }
 
     @Override
+    public void zeroSensors() {
+        ahrs.reset();
+        last_angle = null;
+    }
+
+    @Override
     public void stop() {
         mecanumDriveSignalDesired = null;
+        setOpenLoop(new DriveSignal(0,0,0,0));
     }
 
     public static class PeriodicIO {
@@ -158,6 +206,10 @@ public class Drive extends Subsystem {
         public double right_front_demand;
         public double left_back_demand;
         public double right_back_demand;
+
+        public String toString() {
+            return left_back_demand + " " + right_front_demand + " " + left_back_demand + " " + right_back_demand;
+        }
     }
 
 }

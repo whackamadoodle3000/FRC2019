@@ -12,7 +12,7 @@ public class ExampleSubsystem extends Subsystem {
     }
 
     public void writePeriodicOutputs() {
-        System.out.println("Test");
+        //System.out.println("Test");
     }
 
     public boolean checkSystem() {

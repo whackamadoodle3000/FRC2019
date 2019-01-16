@@ -2,8 +2,8 @@ package frc.team972.robot.util;
 
 public class MecanumHelper {
 
-    public static CoordinateDriveSignal mecanumDrive(double x, double y, double rotation) {
-        return new CoordinateDriveSignal(handleDeadband(x, 0.05), handleDeadband(y, 0.05), handleDeadband(rotation, 0.05));
+    public static CoordinateDriveSignal mecanumDrive(double x, double y, double rotation, boolean noFieldOrient) {
+        return new CoordinateDriveSignal(handleDeadband(x, 0.05), handleDeadband(y, 0.05), handleDeadband(rotation, 0.05), noFieldOrient);
     }
 
     /*
@@ -18,13 +18,30 @@ public class MecanumHelper {
         signal.y = rotatedVector[1];
 
         DriveSignal driveSignal = new DriveSignal(
-                signal.x + signal.y + signal.rotation,
-                -signal.x + signal.y - signal.rotation,
                 -signal.x + signal.y + signal.rotation,
-                signal.x + signal.y - signal.rotation
+                signal.x - signal.y + signal.rotation,
+                signal.x + signal.y + signal.rotation,
+                -signal.x - signal.y + signal.rotation
         );
 
+        normalize(driveSignal);
+
         return driveSignal;
+    }
+
+    public static void normalize(DriveSignal driveSignal) {
+        double mag[] = new double[]{driveSignal.getLeftFront(), driveSignal.getLeftBack(), driveSignal.getRightFront(), driveSignal.getRightBack()};
+        double maxMag = 0;
+        for (int i = 1; i < mag.length; i++) {
+            double temp = Math.abs(mag[i]);
+            if (maxMag < temp) {
+                maxMag = temp;
+            }
+        }
+
+        if(maxMag > 1.0) {
+            driveSignal.set(driveSignal.getLeftFront() / maxMag, driveSignal.getLeftBack() / maxMag, driveSignal.getRightFront() / maxMag, driveSignal.getRightBack() / maxMag);
+        }
     }
 
     private static double[] rotateVector(double x, double y, double angle) {
