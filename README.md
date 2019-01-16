@@ -15,3 +15,6 @@ ___
 - [ ] Test camera switching on the robot (Maciej)
 - [ ] Add overlay to the feed from the camera (Maciej)
 - [ ] Robot localization
+
+### Set-Up Environment
+- JDK in folder `C:\Program Files\Java\jdk-11.0.1`
