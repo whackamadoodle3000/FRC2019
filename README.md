@@ -18,3 +18,4 @@ ___
 
 ### Set-Up Environment
 - JDK in folder `C:\Program Files\Java\jdk-11.0.1`
+- Open gitbash. Run `git init`, `git clone https://github.com/iron-claw-972/FRC2019.git`
