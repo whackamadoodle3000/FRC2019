@@ -1,6 +1,7 @@
 # FRC2019
 ___
 ### TODO
+- [ ] Fix code building
 - [x] Add teleop logic for mecanum drive (Jody)
 - [ ] Add teleop logic for arcade drive (Val)
 - [ ] Detect alignment lines
