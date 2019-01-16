@@ -1,6 +1,8 @@
 # FRC2019
 ___
 ### TODO
+- [ ] Fix code building
+- [ ] Refactor Code Structure
 - [x] Add teleop logic for mecanum drive (Jody)
 - [ ] Add teleop logic for arcade drive (Val)
 - [ ] Detect alignment lines
@@ -12,3 +14,4 @@ ___
 - [ ] Optimize camera network
 - [ ] Test camera switching on the robot (Maciej)
 - [ ] Add overlay to the feed from the camera (Maciej)
+- [ ] Robot localization
