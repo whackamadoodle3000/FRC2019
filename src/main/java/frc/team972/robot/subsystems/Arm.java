@@ -6,14 +6,17 @@ import edu.wpi.first.wpilibj.Encoder;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 public class Arm extends Subsystem {
+    //General initializations
     private static Arm mArm = new Arm();
-
+    private static boolean isFirstTime = true;
+    private static boolean everythingStopped = false;
+    
     //Arm initializations
     public static double desiredArmAngle = 0;
     private static double currentArmAngle = 0;
     public static final double clicksToDegrees = 1;
     private static Encoder armEncoder = new Encoder(0, 1, false, Encoder.EncodingType.k4X);
-    private static boolean isFirstTime = true;
+    private static final double[] angleArray = [20,30,40]; //different set heights
 
     //PID initializations
     private static final double proportionFactor = 0;
@@ -43,7 +46,9 @@ public class Arm extends Subsystem {
         if (isFirstTime){
             initialize();
         }
-        moveToAngle();
+        if (!everythingStopped){
+            moveToAngle();
+        }
         //System.out.println("Test");
     }
 
@@ -68,7 +73,7 @@ public class Arm extends Subsystem {
     }
 
     public void stop() {
-        armEncoder.reset();
+        everythingStopped = true;
     }
 
     public void zeroSensors() {
