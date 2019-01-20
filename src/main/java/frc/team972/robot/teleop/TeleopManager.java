@@ -1,12 +1,14 @@
 package frc.team972.robot.teleop;
 
 import frc.team972.robot.subsystems.Drive;
+import frc.team972.robot.subsystems.PistonClimb;
 import frc.team972.robot.util.MecanumHelper;
 
 public class TeleopManager {
     private static TeleopManager mInstance = null;
 
     private Drive mDrive = Drive.getInstance();
+    private PistonClimb pistonClimb = PistonClimb.getInstance();
     private ControlBoard controlBoard = ControlBoard.getInstance();
 
     public static TeleopManager getInstance() {
@@ -20,5 +22,6 @@ public class TeleopManager {
         mDrive.setOpenLoopMecanum(
                 MecanumHelper.mecanumDrive(-controlBoard.getTranslateX(), controlBoard.getTranslateY(), controlBoard.getRotate(), controlBoard.getNoFieldOrient())
         );
+        pistonClimb.climbManager(controlBoard.getPistonClimbStart());
     }
 }

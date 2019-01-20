@@ -39,5 +39,9 @@ public class GamepadDriveControlBoard {
     public boolean getNoFieldOrient() {
         return mJoystick.getRawButton(6);
     }
+    
+    public boolean getPistonClimbStart() {
+    	return mJoystick.getRawButton(8);
+    }
 
 }

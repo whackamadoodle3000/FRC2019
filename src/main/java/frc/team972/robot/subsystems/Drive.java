@@ -28,7 +28,7 @@ public class Drive extends Subsystem {
 
     private boolean mIsBrakeMode;
     private static Drive mInstance = null;
-
+    
     public Drive() {
         /*
         mLeftFront = new VictorSPX(Constants.mLeftFrontId);

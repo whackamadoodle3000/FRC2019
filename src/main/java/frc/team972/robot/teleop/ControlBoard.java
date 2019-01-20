@@ -31,4 +31,8 @@ public class ControlBoard {
     public boolean getNoFieldOrient() {
         return mDriveControlBoard.getNoFieldOrient();
     }
+    
+    public boolean getPistonClimbStart() {
+    	return mDriveControlBoard.getPistonClimbStart();
+    }
 }
