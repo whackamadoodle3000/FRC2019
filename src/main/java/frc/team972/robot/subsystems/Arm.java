@@ -11,7 +11,7 @@ public class Arm extends Subsystem {
     private static boolean isFirstTime = true;
     private static boolean everythingStopped = false;
     
-    //Arm initializations
+    //Arm motor and encoder initializations
     public static double desiredArmAngle = 0;
     private static double currentArmAngle = 0;
     public static final double clicksToDegrees = 1;
@@ -85,6 +85,10 @@ public class Arm extends Subsystem {
 
     public void setDesiredArmAngle(double angle){
         desiredArmAngle = angle;
+    }
+    
+    public void setDesiredArmLevel(double level){
+        desiredArmAngle = angleArray[level];
     }
 
     public double getDesiredArmAngle(){
