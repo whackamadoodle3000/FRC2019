@@ -47,6 +47,7 @@ public class Arm extends Subsystem {
             initialize();
         }
         if (!everythingStopped){
+            currentArmAngle = armEncoder.get();
             moveToAngle();
         }
         //System.out.println("Test");
@@ -70,6 +71,7 @@ public class Arm extends Subsystem {
     }
 
     public void outputTelemetry() {
+        System.out.println("Current Angle: " + currentArmAngle + " | Desired Arm Angle: " + desiredArmAngle);
     }
 
     public void stop() {
