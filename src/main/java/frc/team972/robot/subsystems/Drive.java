@@ -21,7 +21,7 @@ public class Drive extends Subsystem {
 
     private PeriodicIO mPeriodicIO = new PeriodicIO();
     private DriveControlState mDriveControlState;
-    private TalonSRX kLeftFront, kLeftBack, kRightFront, kRightBack;
+    private TalonSRX mLeftFront, mLeftBack, mRightFront, mRightBack;
     private Double last_angle = null;
 
     CoordinateDriveSignal mecanumDriveSignalDesired = null;
@@ -38,17 +38,17 @@ public class Drive extends Subsystem {
         */
 
 
-        kLeftFront = TalonSRXFactory.createDefaultTalon(Constants.kLeftFrontId);
-        configureMaster(kLeftFront, true);
+        mLeftFront = TalonSRXFactory.createDefaultTalon(Constants.kLeftFrontId);
+        configureMaster(mLeftFront, true);
 
-        kLeftBack = TalonSRXFactory.createDefaultTalon(Constants.kLeftBackId);
-        configureMaster(kLeftBack, true);
+        mLeftBack = TalonSRXFactory.createDefaultTalon(Constants.kLeftBackId);
+        configureMaster(mLeftBack, true);
 
-        kRightFront = TalonSRXFactory.createDefaultTalon(Constants.kRightFrontId);
-        configureMaster(kRightFront, false);
+        mRightFront = TalonSRXFactory.createDefaultTalon(Constants.kRightFrontId);
+        configureMaster(mRightFront, false);
 
-        kRightBack = TalonSRXFactory.createDefaultTalon(Constants.kRightBackId);
-        configureMaster(kRightBack, false);
+        mRightBack = TalonSRXFactory.createDefaultTalon(Constants.kRightBackId);
+        configureMaster(mRightBack, false);
 
         mIsBrakeMode = true;
         setBrakeMode(true);
@@ -110,10 +110,10 @@ public class Drive extends Subsystem {
             mIsBrakeMode = on;
             NeutralMode mode = on ? NeutralMode.Brake : NeutralMode.Coast;
 
-            kLeftBack.setNeutralMode(mode);
-            kLeftFront.setNeutralMode(mode);
-            kRightBack.setNeutralMode(mode);
-            kRightFront.setNeutralMode(mode);
+            mLeftBack.setNeutralMode(mode);
+            mLeftFront.setNeutralMode(mode);
+            mRightBack.setNeutralMode(mode);
+            mRightFront.setNeutralMode(mode);
         }
     }
 
@@ -177,10 +177,10 @@ public class Drive extends Subsystem {
 
         //System.out.println(mPeriodicIO);
 
-        kRightFront.set(ControlMode.PercentOutput, mPeriodicIO.right_front_demand, DemandType.ArbitraryFeedForward, 0.0);
-        kLeftFront.set(ControlMode.PercentOutput, mPeriodicIO.left_front_demand, DemandType.ArbitraryFeedForward, 0.0);
-        kRightBack.set(ControlMode.PercentOutput, mPeriodicIO.right_back_demand, DemandType.ArbitraryFeedForward, 0.0);
-        kLeftBack.set(ControlMode.PercentOutput, mPeriodicIO.left_back_demand, DemandType.ArbitraryFeedForward, 0.0);
+        mRightFront.set(ControlMode.PercentOutput, mPeriodicIO.right_front_demand, DemandType.ArbitraryFeedForward, 0.0);
+        mLeftFront.set(ControlMode.PercentOutput, mPeriodicIO.left_front_demand, DemandType.ArbitraryFeedForward, 0.0);
+        mRightBack.set(ControlMode.PercentOutput, mPeriodicIO.right_back_demand, DemandType.ArbitraryFeedForward, 0.0);
+        mLeftBack.set(ControlMode.PercentOutput, mPeriodicIO.left_back_demand, DemandType.ArbitraryFeedForward, 0.0);
     }
 
     @Override

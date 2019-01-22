@@ -8,7 +8,7 @@ public class TeleopManager {
     private static TeleopManager mInstance = null;
 
     private Drive mDrive = Drive.getInstance();
-    private ElevatorSubsystem.getInstance();
+    private ElevatorSubsystem mElevator = ElevatorSubsystem.getInstance();
     private ControlBoard controlBoard = ControlBoard.getInstance();
 
     public static TeleopManager getInstance() {
@@ -23,6 +23,8 @@ public class TeleopManager {
                 MecanumHelper.mecanumDrive(-controlBoard.getTranslateX(), controlBoard.getTranslateY(), controlBoard.getRotate(), controlBoard.getNoFieldOrient())
         );
 
-
+        mElevator.readControllerInputs(
+                controlBoard.getElevatorAxis()
+        );
     }
 }

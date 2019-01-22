@@ -21,4 +21,8 @@ public class ElevatorJoystickControlBoard {
         mJoystick = new Joystick(Constants.kElevatorJoystickPort);
     }
 
+    public double getElevatorAxis() {
+        return mJoystick.getRawAxis(100); //TODO: Figure out correct axis id
+    }
+
 }
