@@ -1,5 +1,6 @@
 package frc.team972.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import frc.team972.robot.loops.ILooper;
 import frc.team972.robot.driver_utils.TalonSRXFactory;
 import frc.team972.robot.util.PIDHandler;
@@ -46,7 +47,7 @@ public class Arm extends Subsystem {
         if (!everythingStopped){
             currentArmAngle = pArmEncoder.get();
             PIDControl.setDesired(desiredArmAngle);
-            armTalon.set(PIDControl.output(currentArmAngle));
+            armTalon.set(ControlMode.PercentOutput, PIDControl.output(currentArmAngle));
         }
         //System.out.println("Test");
     }
