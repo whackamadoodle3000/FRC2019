@@ -6,6 +6,7 @@ import frc.team972.robot.driver_utils.TalonSRXFactory;
 import frc.team972.robot.util.PIDHandler;
 import edu.wpi.first.wpilibj.Encoder;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import frc.team972.robot.Constants;
 
 public class Arm extends Subsystem {
     //General initializations
@@ -16,7 +17,7 @@ public class Arm extends Subsystem {
     public static double desiredArmAngle = 0;
     private static double currentArmAngle = 0;
     public static final double clicksToDegrees = 1;
-    private static Encoder pArmEncoder = new Encoder(0, 1, false, Encoder.EncodingType.k4X);
+    private static Encoder pArmEncoder = new Encoder(Constants.mArmEncoderChannelA, Constants.mArmEncoderChannelB, false, Encoder.EncodingType.k4X);
     private static final double[] angleArray = new double[] {20,30,40,50}; //different set heights
 
     //PID initializations
@@ -25,7 +26,7 @@ public class Arm extends Subsystem {
     private final double kDerivative = 0;
     private PIDHandler PIDControl = new PIDHandler(angleArray[angleArray.length-1], kProportion, kIntegral, kDerivative, 0);
 
-    public static TalonSRX armTalon = TalonSRXFactory.createDefaultTalon(1);
+    public static TalonSRX armTalon = TalonSRXFactory.createDefaultTalon(Constants.mArmTalonId);
 
     public Arm (){
         zeroSensors();
