@@ -1,14 +1,40 @@
 package frc.team972.robot.subsystems;
 
-import edu.wpi.first.wpilibj.*;
-import frc.team972.robot.*;
 import frc.team972.robot.loops.ILooper;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 
 public class HatchIntake extends Subsystem {
 
+    public boolean hatchIntakeWorks = false;
+
     private static ExampleSubsystem mInstance = new ExampleSubsystem();
 
-    public DoubleSolenoid creativeVariableName = new DoubleSolenoid(-1, -1);
+    public DoubleSolenoid hatchIntakeDoubleSolenoid;
+
+    public void init() {
+        hatchIntakeDoubleSolenoid = new DoubleSolenoid(-1, -1);
+    }
+
+    public void open() {
+        hatchIntakeDoubleSolenoid.set(DoubleSolenoid.Value.kForward);
+    }
+
+    public void close() {
+        hatchIntakeDoubleSolenoid.set(DoubleSolenoid.Value.kReverse);
+    }
+
+    public void off() {
+        hatchIntakeDoubleSolenoid.set(DoubleSolenoid.Value.kOff);
+    }
+
+    public void toggle() {
+        if (hatchIntakeWorks){
+            open();
+        }
+        else{
+            close();
+        }
+    }
 
     public void writeToLog() {
     }
@@ -38,13 +64,5 @@ public class HatchIntake extends Subsystem {
 
     public static ExampleSubsystem getInstance() {
         return mInstance;
-    }
-
-    public void open(){
-        creativeVariableName.set(DoubleSolenoid.Value.kForward);
-    }
-
-    public void close(){
-        creativeVariableName.set(DoubleSolenoid.Value.kReverse);
     }
 }
